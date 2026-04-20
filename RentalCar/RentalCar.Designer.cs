@@ -76,6 +76,7 @@
             ExitButton.TabIndex = 4;
             ExitButton.Text = "E&xit";
             ExitButton.UseVisualStyleBackColor = true;
+            ExitButton.Click += ExitButton_Click;
             // 
             // SummaryButton
             // 
@@ -85,6 +86,7 @@
             SummaryButton.TabIndex = 3;
             SummaryButton.Text = "&Summary";
             SummaryButton.UseVisualStyleBackColor = true;
+            SummaryButton.Click += SummaryButton_Click;
             // 
             // CalculateButton
             // 
@@ -94,6 +96,7 @@
             CalculateButton.TabIndex = 1;
             CalculateButton.Text = "&Calculate";
             CalculateButton.UseVisualStyleBackColor = true;
+            CalculateButton.Click += CalculateButton_Click;
             // 
             // ClearButton
             // 
@@ -103,6 +106,7 @@
             ClearButton.TabIndex = 2;
             ClearButton.Text = "&Clear";
             ClearButton.UseVisualStyleBackColor = true;
+            ClearButton.Click += ClearButton_Click;
             // 
             // SeniorDiscountCheckBox
             // 

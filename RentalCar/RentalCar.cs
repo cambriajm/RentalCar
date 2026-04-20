@@ -47,8 +47,8 @@ namespace RentalCar
             MilesRadioButton.Checked = true;
             AAADiscountCheckBox.Checked = true;
             SeniorDiscountCheckBox.Checked = true;
-            
-            if (customerTotal >=0)
+
+            if (customerTotal >= 0)
             {
                 SummaryButton.Enabled = true;
             }
@@ -92,7 +92,7 @@ namespace RentalCar
             }
             try
             {
-                if ((int.Parse(EOdometerReadTextBox.Text)<0))
+                if ((int.Parse(EOdometerReadTextBox.Text) < 0))
                 {
                     message += "Please enter end Odometer reading.\n";
                 }
@@ -103,7 +103,7 @@ namespace RentalCar
             }
             try
             {
-                if (int.Parse(DaysTextBox.Text)<0||int.Parse(DaysTextBox.Text)>45)
+                if (int.Parse(DaysTextBox.Text) < 0 || int.Parse(DaysTextBox.Text) > 45)
                 {
                     message += "Please enter the number of days (0-45).\n";
                 }
@@ -122,7 +122,7 @@ namespace RentalCar
         private bool ValidateFields()
         {
             bool valid = true;
-            if (CustomerNameTextBox.Text != "") 
+            if (CustomerNameTextBox.Text != "")
             {
                 CustomerNameTextBox.BackColor = Color.LightGreen;
             }
@@ -190,7 +190,7 @@ namespace RentalCar
                 {
                     EOdometerReadTextBox.BackColor = Color.LightGreen;
                 }
-         
+
                 else
                 {
                     EOdometerReadTextBox.BackColor = Color.LightYellow;
@@ -205,7 +205,7 @@ namespace RentalCar
 
             try
             {
-                if  (int.Parse(DaysTextBox.Text)>=1&&int.Parse(DaysTextBox.Text)<=45)
+                if (int.Parse(DaysTextBox.Text) >= 1 && int.Parse(DaysTextBox.Text) <= 45)
                 {
                     DaysTextBox.BackColor = Color.LightGreen;
                 }
@@ -266,19 +266,45 @@ namespace RentalCar
                 milageCharge = 0.00m;
                 MilageChargeTextBox.Text = $"{milageCharge:C}";
             }
-            if(miles >= 201 && miles >= 500)
+            if (miles >= 201 && miles >= 500)
             {
                 milageCharge = miles * 0.12m;
-                MilageChargeTextBox.Text=$"{milageCharge:C}";
+                MilageChargeTextBox.Text = $"{milageCharge:C}";
             }
-            if(miles >= 501)
+            if (miles >= 501)
             {
                 milageCharge = miles * 0.1m;
-                MilageChargeTextBox.Text=$"{milageCharge:C}"
+                MilageChargeTextBox.Text = $"{milageCharge:C}";
             }
             return milageCharge;
         }
-         
+
+        private decimal CalcDay(decimal dayCharge)
+        {
+            dayCharge = decimal.Parse(DaysTextBox.Text) * 15.00m;
+            DayChargeTextBox.Text = $"{dayCharge:C}";
+            return dayCharge;
+        }
+
+        void TransactionCalc()
+        {
+            decimal originalAmount = 0;
+            decimal milesDriven = 0;
+            decimal milageCharge = 0;
+            decimal dayCharge = 0;
+            decimal totalDiscount = 0;
+
+            CalcDrivenMiles(milesDriven);
+            milageCharge = CalcMilageCharge(originalAmount);
+            dayCharge = CalcDay(originalAmount + milageCharge);
+            totalDiscount += CalcAAA(originalAmount + milageCharge + dayCharge);
+            totalDiscount += CalcSenior(originalAmount + milageCharge + dayCharge);
+            DiscountTextBox.Text = $"{totalDiscount:C}";
+            amountDue = (originalAmount + milageCharge + dayCharge) - totalDiscount;
+            AmountOwedTextBox.Text = $"{amountDue:C}";
+        }
+        //events below-----------------------------------------
+
 
 
 
@@ -289,6 +315,48 @@ namespace RentalCar
 
         }
 
-         
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+
+            DialogResult result = MessageBox.Show("Do you want to exit?", "Exit", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                this.Close();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void SummaryButton_Click(object sender, EventArgs e)
+        {
+            milesTotal = milesTotal + miles;
+            totalPay = totalPay + amountDue;
+            MessageBox.Show($"Customer Total: {customerTotal}+" + "\n" +
+                            $"Miles Total:    {milesTotal}+" + "\n" +
+                            $"Total:          {totalPay}+" + "\n");
+            SetDefaults();
+
+        }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+            SetDefaults();
+        }
+
+        private void CalculateButton_Click(object sender, EventArgs e)
+        {
+            customerTotal++;
+            if(ValidateFields())
+            {
+                TransactionCalc();
+            }
+            else
+            {
+                Message();
+            }
+        }
     }
 }
+ 
